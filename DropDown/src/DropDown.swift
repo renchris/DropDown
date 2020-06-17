@@ -76,7 +76,7 @@ public final class DropDown: UIView {
 	//MARK: - Properties
 
 	/// The current visible drop down. There can be only one visible drop down at a time.
-	public static weak var VisibleDropDown: DropDown?
+    public static weak var VisibleDropDownList: [DropDown?]?
 
 	//MARK: UI
 	fileprivate let dismissableView = UIView()
@@ -433,7 +433,7 @@ public final class DropDown: UIView {
 		willSet {
 			if newValue == .onTap {
 				let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismissableViewTapped))
-				dismissableView.addGestureRecognizer(gestureRecognizer)
+				//dismissableView.addGestureRecognizer(gestureRecognizer)
 			} else if let gestureRecognizer = dismissableView.gestureRecognizers?.first {
 				dismissableView.removeGestureRecognizer(gestureRecognizer)
 			}
@@ -843,9 +843,10 @@ extension DropDown {
 		let visibleWindow = window != nil ? window : UIWindow.visibleWindow()
 		visibleWindow?.addSubview(self)
 		visibleWindow?.bringSubviewToFront(self)
+        visibleWindow?.backgroundColor = .green
 
 		self.translatesAutoresizingMaskIntoConstraints = false
-		visibleWindow?.addUniversalConstraints(format: "|[dropDown]|", views: ["dropDown": self])
+		visibleWindow?.addUniversalConstraints(format: "|[view]|", views: ["view": self])
 
 		let layout = computeLayout()
 
@@ -1119,7 +1120,7 @@ extension DropDown: UITableViewDataSource, UITableViewDelegate {
             deselectRow(at: selectedRowIndex)
         }
         
-        hide()
+        //hide()
     
 	}
 

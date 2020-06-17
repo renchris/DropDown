@@ -1,283 +1,224 @@
 //
-//  ViewController.swift
-//  DropDown
+//  ThirdViewController.swift
+//  tabBarApp
 //
-//  Created by Kevin Hirsch on 28/07/15.
-//  Copyright (c) 2015 Kevin Hirsch. All rights reserved.
+//  Created by default on 2020-05-22.
+//  Copyright © 2020 Chris Ren. All rights reserved.
 //
+
 
 import UIKit
+
 import DropDown
 
-class ViewController: UIViewController {
+//note. for FirstViewController with the Calendar, when on a day, and it turns the next day on midnight, the blue fill white inner circle circle that indicates Today is selected, stays on the previous day. It only changes to the new day (the day after midnight) once the app is refreshed.
+//Also, when dismiss/closing the app, and restarting it, it goes to the Today date (like kind of expected). Think I should improve it by making it the current date still if it was the previous day and there are entires. for when working on an event past midnight.
 
-	//MARK: - Properties
-	
-	@IBOutlet weak var chooseArticleButton: UIButton!
-	@IBOutlet weak var amountButton: UIButton!
-	@IBOutlet weak var chooseButton: UIButton!
-	@IBOutlet weak var centeredDropDownButton: UIButton!
-	@IBOutlet weak var rightBarButton: UIBarButtonItem!
-	let textField = UITextField()
-	
-	//MARK: - DropDown's
-	
-	let chooseArticleDropDown = DropDown()
-	let amountDropDown = DropDown()
-	let chooseDropDown = DropDown()
-	let centeredDropDown = DropDown()
-	let rightBarDropDown = DropDown()
-	
-	lazy var dropDowns: [DropDown] = {
-		return [
-			self.chooseArticleDropDown,
-			self.amountDropDown,
-			self.chooseDropDown,
-			self.centeredDropDown,
-			self.rightBarDropDown
-		]
-	}()
-	
-	//MARK: - Actions
-	
-	@IBAction func chooseArticle(_ sender: AnyObject) {
-		chooseArticleDropDown.show()
-	}
-	
-	@IBAction func changeAmount(_ sender: AnyObject) {
-		amountDropDown.show()
-	}
-	
-	@IBAction func choose(_ sender: AnyObject) {
-		chooseDropDown.show()
-	}
-	
-	@IBAction func showCenteredDropDown(_ sender: AnyObject) {
-		centeredDropDown.show()
-	}
-	
-	@IBAction func showBarButtonDropDown(_ sender: AnyObject) {
-		rightBarDropDown.show()
-	}
-	
-	@IBAction func changeDIsmissMode(_ sender: UISegmentedControl) {
-		switch sender.selectedSegmentIndex {
-		case 0: dropDowns.forEach { $0.dismissMode = .automatic }
-		case 1: dropDowns.forEach { $0.dismissMode = .onTap }
-		default: break;
-		}
-	}
-	
-	@IBAction func changeDirection(_ sender: UISegmentedControl) {
-		switch sender.selectedSegmentIndex {
-		case 0: dropDowns.forEach { $0.direction = .any }
-		case 1: dropDowns.forEach { $0.direction = .bottom }
-		case 2: dropDowns.forEach { $0.direction = .top }
-		default: break;
-		}
-	}
-	
-	@IBAction func changeUI(_ sender: UISegmentedControl) {
-		switch sender.selectedSegmentIndex {
-		case 0: setupDefaultDropDown()
-		case 1: customizeDropDown(self)
-		default: break;
-		}
-	}
-	
-	@IBAction func showKeyboard(_ sender: AnyObject) {
-		textField.becomeFirstResponder()
-	}
-	
-	@IBAction func hideKeyboard(_ sender: AnyObject) {
-		view.endEditing(false)
-	}
-	
-	func setupDefaultDropDown() {
-		DropDown.setupDefaultAppearance()
-		
-		dropDowns.forEach {
-			$0.cellNib = UINib(nibName: "DropDownCell", bundle: Bundle(for: DropDownCell.self))
-			$0.customCellConfiguration = nil
-		}
-	}
-	
-	func customizeDropDown(_ sender: AnyObject) {
-		let appearance = DropDown.appearance()
-		
-		appearance.cellHeight = 60
-		appearance.backgroundColor = UIColor(white: 1, alpha: 1)
-		appearance.selectionBackgroundColor = UIColor(red: 0.6494, green: 0.8155, blue: 1.0, alpha: 0.2)
-//		appearance.separatorColor = UIColor(white: 0.7, alpha: 0.8)
-		appearance.cornerRadius = 10
-		appearance.shadowColor = UIColor(white: 0.6, alpha: 1)
-		appearance.shadowOpacity = 0.9
-		appearance.shadowRadius = 25
-		appearance.animationduration = 0.25
-		appearance.textColor = .darkGray
-//		appearance.textFont = UIFont(name: "Georgia", size: 14)
+//need with drop down:
+// 1.  have two drop for one button.  done
+// 2.  both show when clicked.        can do, did
+// 3.  allow click on either or       need to figure out how to make area outside of chosen dropdown clickable
+//     when both are up
+// 4.  dismiss when both dropdowns    need to figure out above
+//     have a cell selected
+// 5.  dismiss when area              need to figure out above
+//     outside is clicked
 
-		if #available(iOS 11.0, *) {
-			appearance.setupMaskedCorners([.layerMaxXMaxYCorner, .layerMinXMaxYCorner])
-		}
-		
-		dropDowns.forEach {
-			/*** FOR CUSTOM CELLS ***/
-			$0.cellNib = UINib(nibName: "MyCell", bundle: nil)
-			
-			$0.customCellConfiguration = { (index: Index, item: String, cell: DropDownCell) -> Void in
-				guard let cell = cell as? MyCell else { return }
-				
-				// Setup your custom UI components
-				cell.logoImageView.image = UIImage(named: "logo_\(index % 10)")
-			}
-			/*** ---------------- ***/
-		}
-	}
-	
-	//MARK: - UIViewController
-	
-	override func viewDidLoad() {
-		super.viewDidLoad()
-		
-		setupDropDowns()
-		dropDowns.forEach { $0.dismissMode = .onTap }
-		dropDowns.forEach { $0.direction = .any }
-		
-		view.addSubview(textField)
-	}
 
-	//MARK: - Setup
-	
-	func setupDropDowns() {
-		setupChooseArticleDropDown()
-		setupAmountDropDown()
-		setupChooseDropDown()
-		setupCenteredDropDown()
-		setupRightBarDropDown()
-	}
-	
-	func setupChooseArticleDropDown() {
-		chooseArticleDropDown.anchorView = chooseArticleButton
-		
-		// Will set a custom with instead of anchor view width
-		//		dropDown.width = 100
-		
-		// By default, the dropdown will have its origin on the top left corner of its anchor view
-		// So it will come over the anchor view and hide it completely
-		// If you want to have the dropdown underneath your anchor view, you can do this:
-		chooseArticleDropDown.bottomOffset = CGPoint(x: 0, y: chooseArticleButton.bounds.height)
-		
-		// You can also use localizationKeysDataSource instead. Check the docs.
-		chooseArticleDropDown.dataSource = [
-			"iPhone SE | Black | 64G",
-			"Samsung S7",
-			"Huawei P8 Lite Smartphone 4G",
-			"Asus Zenfone Max 4G",
-			"Apple Watwh | Sport Edition"
-		]
-		
-		// Action triggered on selection
-		chooseArticleDropDown.selectionAction = { [weak self] (index, item) in
-			self?.chooseArticleButton.setTitle(item, for: .normal)
-		}
+class ViewController: UIViewController{
+    
+    //lazy var coverTextField = createTextField(labelTitle: "Fill in cover elgibility")
+    var coverButtonView = UIStackView()
+    lazy var coverLeftHourDropdown = createDropdown(items: ["10", "11", "12", "1", "2", "3"])
+    lazy var coverLeftMinuteDropdown = createDropdown(items: ["00", "15", "30", "45"])
+    lazy var coverRightDropdown = createDropdown(items: ["10", "11", "12", "1", "2", "3"])
+    
+    let cellBackgroundColour = UIColor(red: 239.0/255.0, green: 243.0/255.0, blue: 244.0/255.0, alpha: 1.0)
+    
+    override func viewDidLoad(){
+        super.viewDidLoad()
         
-        chooseArticleDropDown.multiSelectionAction = { [weak self] (indices, items) in
-            print("Muti selection action called with: \(items)")
-            if items.isEmpty {
-                self?.chooseArticleButton.setTitle("", for: .normal)
+        //Cover Field
+        //let coverTextField = createTextField(labelTitle: "Fill in cover elgibility")
+        //let coverTextFieldView = createLabelView(textField: coverTextField)
+        
+        let coverLeftButton = createCoverButton(buttonTitle: "NO COVER")
+        let coverRighButton = createCoverButton(buttonTitle: "DISCOUNT")
+        
+        coverLeftHourDropdown.anchorView = coverLeftButton
+        coverLeftMinuteDropdown.anchorView = coverLeftButton
+        coverRightDropdown.anchorView = coverRighButton
+        
+        
+        
+        print("left button 0 width: \(coverLeftButton.frame.width)")
+        
+
+        coverLeftHourDropdown.willShowAction = {
+            if let button = self.coverLeftHourDropdown.anchorView as? UIButton{
+                print("left button A width: \(button.frame.width)")
+                self.coverLeftHourDropdown.width = button.frame.width / 2
+                self.coverLeftMinuteDropdown.bottomOffset = CGPoint(x: self.coverLeftHourDropdown.width!, y: self.coverLeftMinuteDropdown.bottomOffset.y)
+                
             }
         }
-		
-		// Action triggered on dropdown cancelation (hide)
-		//		dropDown.cancelAction = { [unowned self] in
-		//			// You could for example deselect the selected item
-		//			self.dropDown.deselectRowAtIndexPath(self.dropDown.indexForSelectedRow)
-		//			self.actionButton.setTitle("Canceled", forState: .Normal)
-		//		}
-		
-		// You can manually select a row if needed
-		//		dropDown.selectRowAtIndex(3)
-	}
-	
-	func setupAmountDropDown() {
-		amountDropDown.anchorView = amountButton
-		
-		// By default, the dropdown will have its origin on the top left corner of its anchor view
-		// So it will come over the anchor view and hide it completely
-		// If you want to have the dropdown underneath your anchor view, you can do this:
-		amountDropDown.bottomOffset = CGPoint(x: 0, y: amountButton.bounds.height)
-		
-		// You can also use localizationKeysDataSource instead. Check the docs.
-		amountDropDown.dataSource = [
-			"10 €",
-			"20 €",
-			"30 €",
-			"40 €",
-			"50 €",
-			"60 €",
-			"70 €",
-			"80 €",
-			"90 €",
-			"100 €",
-			"110 €",
-			"120 €"
-		]
-		
-		// Action triggered on selection
-		amountDropDown.selectionAction = { [weak self] (index, item) in
-			self?.amountButton.setTitle(item, for: .normal)
-		}
-	}
-	
-	func setupChooseDropDown() {
-		chooseDropDown.anchorView = chooseButton
-		
-		// By default, the dropdown will have its origin on the top left corner of its anchor view
-		// So it will come over the anchor view and hide it completely
-		// If you want to have the dropdown underneath your anchor view, you can do this:
-		chooseDropDown.bottomOffset = CGPoint(x: 0, y: chooseButton.bounds.height)
-		
-		// You can also use localizationKeysDataSource instead. Check the docs.
-		chooseDropDown.dataSource = [
-			"Lorem ipsum dolor",
-			"sit amet consectetur",
-			"cadipisci en..."
-		]
-		
-		// Action triggered on selection
-		chooseDropDown.selectionAction = { [weak self] (index, item) in
-			self?.chooseButton.setTitle(item, for: .normal)
-		}
-	}
-	
-	func setupCenteredDropDown() {
-		// Not setting the anchor view makes the drop down centered on screen
-//		centeredDropDown.anchorView = centeredDropDownButton
-		
-		// You can also use localizationKeysDataSource instead. Check the docs.
-		centeredDropDown.dataSource = [
-			"The drop down",
-			"Is centered on",
-			"the view because",
-			"it has no anchor view defined.",
-			"Click anywhere to dismiss."
-		]
         
-        centeredDropDown.selectionAction = { [weak self] (index, item) in
-            self?.centeredDropDownButton.setTitle(item, for: .normal)
+        
+        
+        
+        
+//        coverLeftDropdown.willShowAction = {
+//
+//        }
+        
+        coverLeftHourDropdown.selectionAction = { (index, string) in
+            print("Dropdown cell selected: \(index), \(string)")
+            if(index == 0){
+                if let button = self.coverLeftHourDropdown.anchorView as? UIButton {
+                    print("zero (\(index) index selected")
+                    button.isSelected = false
+                    button.setTitleColor(.black, for: .normal)
+                    button.layer.borderColor = UIColor.systemGray2.cgColor
+                    print("left button 1 width: \(button.frame.width)")
+                }
+            }else{
+                if let button = self.coverLeftHourDropdown.anchorView as? UIButton {
+                    print("\(index) index selected")
+                    button.isSelected = true
+                    button.setTitleColor(.systemBlue, for: .normal)
+                    button.layer.borderColor = UIColor.systemBlue.cgColor
+                    print("left button 2 width: \(button.frame.size.width)")
+                }
+            }
+            //print("left dropdown width: \(self.coverLeftDropdown.width)")
+            
         }
-	}
-	
-	func setupRightBarDropDown() {
-		rightBarDropDown.anchorView = rightBarButton
-		
-		// You can also use localizationKeysDataSource instead. Check the docs.
-		rightBarDropDown.dataSource = [
-			"Menu 1",
-			"Menu 2",
-			"Menu 3",
-			"Menu 4"
-		]
-	}
+        
+        coverRightDropdown.selectionAction = { (index, string) in
+            print("Dropdown cell selected: \(index), \(string)")
+            if(index == 0){
+                if let button = self.coverRightDropdown.anchorView as? UIButton {
+                    print("zero (\(index) index selected")
+                    button.isSelected = false
+                    button.setTitleColor(.black, for: .normal)
+                    button.layer.borderColor = UIColor.systemGray2.cgColor
+                }
+            }else{
+                if let button = self.coverRightDropdown.anchorView as? UIButton {
+                    print("\(index) index selected")
+                    button.isSelected = true
+                    button.setTitleColor(.systemBlue, for: .normal)
+                    button.layer.borderColor = UIColor.systemBlue.cgColor
+                }
+            }
+        }
+
+    
+        coverButtonView.axis  = NSLayoutConstraint.Axis.horizontal
+        coverButtonView.distribution = UIStackView.Distribution.fillEqually
+        coverButtonView.spacing = 8.0
+        coverButtonView.addArrangedSubview(coverLeftButton)
+        coverButtonView.addArrangedSubview(coverRighButton)
+        
+        
+        let coverView = UIStackView()
+        coverView.axis  = NSLayoutConstraint.Axis.vertical
+        //coverView.addArrangedSubview(coverTextFieldView)
+        coverView.addArrangedSubview(coverButtonView)
+        
+        
+        
+        //Stack View
+        let stackView   = UIStackView()
+        stackView.axis  = NSLayoutConstraint.Axis.vertical
+        stackView.distribution  = UIStackView.Distribution.equalSpacing
+        stackView.alignment = UIStackView.Alignment.center
+        stackView.spacing   = 16.0*2.5
+        //makes center look off from top nav bar and button hm.
+
+        stackView.addArrangedSubview(coverView)
+    
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(stackView)
+        //Constraints
+
+        stackView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16.0).isActive = true
+        stackView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16.0).isActive = true
+        //stackView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor).isActive = true
+        stackView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true //button and padding above and below
+        coverView.widthAnchor.constraint(equalTo: stackView.widthAnchor).isActive = true
+    }
+
+    
+    //MARK: - View and Subview Creation Methods
+    
+    func createCoverButton(buttonTitle: String) -> UIButton {
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        button.layer.cornerRadius = 8
+        button.backgroundColor = .clear
+        button.setTitle(buttonTitle, for: .normal)
+        
+        button.isSelected = false
+        button.setTitleColor(.black, for: .normal)
+        button.layer.borderColor = UIColor.systemGray2.cgColor
+        button.layer.borderWidth = 2.0
+        
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 18.0)
+        
+//        let title = button.title(for: .normal) ?? ""
+//        let attributedTitle = NSAttributedString(string: title, attributes: [NSAttributedString.Key.kern: 1.0])
+//        button.setAttributedTitle(attributedTitle, for: .normal)
+        
+        button.addTarget(self, action: #selector(coverButtonAction), for: .touchUpInside)
+        
+        return button
+    }
+    
+    func createDropdown(items: [String]) -> DropDown{
+        let dropdown = DropDown()
+        dropdown.dataSource = items
+        
+        dropdown.direction = .bottom
+        let buttonHeight = 48
+        dropdown.bottomOffset = CGPoint(x: 0, y: buttonHeight)
+        dropdown.selectRow(0)
+        return dropdown
+    }
+    
+    @objc func coverButtonAction(sender: UIButton!) {
+        
+        if(sender === self.coverButtonView.subviews[0]){
+            coverLeftHourDropdown.show()
+            coverLeftMinuteDropdown.show()
+        }
+        if(sender === self.coverButtonView.subviews[1]){
+            coverRightDropdown.show()
+        }
+    }
+    
+    @objc func coverButtonHoldDown(sender:UIButton)
+    {
+        if(!sender.isSelected){
+            sender.layer.borderColor = UIColor.systemGray2.cgColor
+        }
+        
+    }
+
+    @objc func coverButtonHoldRelease(sender:UIButton)
+    {
+        if(!sender.isSelected){
+            sender.layer.borderColor = cellBackgroundColour.cgColor
+        }
+        
+    }
+    
+    @objc func coverButtonHoldReEnter(sender:UIButton)
+    {
+        if(!sender.isSelected){
+            sender.layer.borderColor = UIColor.systemGray3.cgColor
+        }
+    }
 }

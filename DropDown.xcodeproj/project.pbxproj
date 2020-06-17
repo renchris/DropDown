@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04684CC024989D6B00DF62AE /* ThirdViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04684CBF24989D6B00DF62AE /* ThirdViewController.swift */; };
 		0A76442B1B676C2300BF1A2D /* DropDownTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A76442A1B676C2300BF1A2D /* DropDownTests.swift */; };
 		0A8518D51D6480190089529A /* MyCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A8518D41D6480190089529A /* MyCell.swift */; };
 		0A8518D71D6481E30089529A /* MyCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A8518D61D6481E30089529A /* MyCell.xib */; };
@@ -59,6 +60,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		04684CBF24989D6B00DF62AE /* ThirdViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdViewController.swift; sourceTree = SOURCE_ROOT; };
 		0A76440F1B676C2300BF1A2D /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A7644241B676C2300BF1A2D /* DropDownTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DropDownTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0A7644291B676C2300BF1A2D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 		0A7644111B676C2300BF1A2D /* Demo */ = {
 			isa = PBXGroup;
 			children = (
+				04684CBF24989D6B00DF62AE /* ThirdViewController.swift */,
 				0AB5D8951D0EF15D002D3A17 /* AppDelegate.swift */,
 				0AB5D8971D0EF15D002D3A17 /* ViewController.swift */,
 				0A8518D41D6480190089529A /* MyCell.swift */,
@@ -358,6 +361,7 @@
 			files = (
 				0AB5D89A1D0EF15D002D3A17 /* ViewController.swift in Sources */,
 				0A8518D51D6480190089529A /* MyCell.swift in Sources */,
+				04684CC024989D6B00DF62AE /* ThirdViewController.swift in Sources */,
 				0AB5D8991D0EF15D002D3A17 /* NiceButton.swift in Sources */,
 				0AB5D8981D0EF15D002D3A17 /* AppDelegate.swift in Sources */,
 			);
@@ -458,7 +462,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -507,7 +511,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
